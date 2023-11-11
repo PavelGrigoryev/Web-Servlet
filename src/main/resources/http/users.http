@@ -1,0 +1,30 @@
+###найти пользователя по id
+GET http://localhost:8080/users?id=1
+Accept: application/json
+
+###сохранить пользователя
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "nickname": "StarLord",
+  "password": "Black123",
+  "role_ids": [
+    1, 2
+  ]
+}
+
+###обновить пользователя по id
+PUT http://localhost:8080/users?id=2
+Content-Type: application/json
+
+{
+  "password": "azerty777",
+  "role_ids": [
+    3
+  ]
+}
+
+###удалить пользователя по id
+DELETE http://localhost:8080/users?id=2
+Content-Type: application/json

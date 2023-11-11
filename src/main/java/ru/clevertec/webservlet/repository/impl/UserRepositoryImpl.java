@@ -57,7 +57,6 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<UserWithRoles> updateById(Long id, UserWithRoleIds userWithRoleIds) {
         return dslContext.update(USER)
                 .set(USER.PASSWORD, userWithRoleIds.getPassword())
-                .set(USER.REGISTER_TIME, userWithRoleIds.getRegisterTime())
                 .where(USER.ID.eq(id))
                 .returning()
                 .fetchOptional()

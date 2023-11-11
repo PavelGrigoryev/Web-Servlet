@@ -9,6 +9,8 @@ import ru.clevertec.webservlet.repository.UserRepository;
 import ru.clevertec.webservlet.repository.impl.UserRepositoryImpl;
 import ru.clevertec.webservlet.service.UserService;
 
+import java.time.LocalDateTime;
+
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -25,6 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserWithRoles save(UserWithRoleIds userWithRoleIds) {
+        userWithRoleIds.setRegisterTime(LocalDateTime.now());
         return userRepository.save(userWithRoleIds)
                 .orElseThrow(() -> new UniqueException("User with username " + userWithRoleIds.getNickname()
                                                        + " is already exist"));
