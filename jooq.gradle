@@ -1,0 +1,38 @@
+ext {
+    jooqVersion = '3.18.6'
+}
+
+jooq {
+    version = "$jooqVersion"
+    configurations {
+        main {
+            generationTool {
+                jdbc {
+                    driver = 'org.postgresql.Driver'
+                    url = project.ext.url
+                    user = project.ext.username
+                    password = project.ext.password
+                }
+                generator {
+                    database {
+                        inputSchema = 'public'
+                        excludes = 'databasechangelog|databasechangeloglock'
+                    }
+                    generate {
+                        pojosEqualsAndHashCode = true
+                        relations = true
+                        deprecated = false
+                        records = true
+                        pojos = true
+                        immutablePojos = false
+                        fluentSetters = true
+                    }
+                    target {
+                        packageName = 'ru.clevertec.webservlet'
+                        directory = 'build/generated/sources/jooq/main'
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,4 @@
+postgresql:
+  url: "jdbc:postgresql://localhost:5432/web"
+  user: "pavel"
+  password: "pavel"
