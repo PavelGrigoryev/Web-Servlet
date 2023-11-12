@@ -39,7 +39,7 @@ public class RoleServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String role = req.getAttribute("/roles").toString();
+        String role = req.getSession().getAttribute("/roles").toString();
         RoleSaveRequest request = gson.fromJson(role, RoleSaveRequest.class);
         RoleResponse response = roleService.save(request);
         sendResponse(resp, response, 201);
@@ -49,7 +49,7 @@ public class RoleServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String id = req.getParameter("id");
         if (Objects.nonNull(id) && id.matches("\\d+")) {
-            String role = req.getAttribute("/roles").toString();
+            String role = req.getSession().getAttribute("/roles").toString();
             RoleUpdateRequest request = gson.fromJson(role, RoleUpdateRequest.class);
             RoleResponse response = roleService.updateById(Long.valueOf(id), request);
             sendResponse(resp, response, 200);

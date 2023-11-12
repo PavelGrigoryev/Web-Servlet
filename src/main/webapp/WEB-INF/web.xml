@@ -3,6 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
          version="5.0">
+
     <error-page>
         <exception-type>ru.clevertec.webservlet.exception.NotFoundException</exception-type>
         <location>/exception_handler</location>
@@ -15,4 +16,23 @@
         <exception-type>ru.clevertec.webservlet.exception.UniqueException</exception-type>
         <location>/exception_handler</location>
     </error-page>
+
+    <filter>
+        <filter-name>LoggingFilter</filter-name>
+        <filter-class>ru.clevertec.webservlet.filter.LoggingFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>EncodingFilter</filter-name>
+        <filter-class>ru.clevertec.webservlet.filter.EncodingFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>EncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>LoggingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
 </web-app>

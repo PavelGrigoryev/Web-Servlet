@@ -1,0 +1,8 @@
+###залогиниться используя никнейм и пороль
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "nickname": "Charlie",
+  "password": "qwerty789"
+}

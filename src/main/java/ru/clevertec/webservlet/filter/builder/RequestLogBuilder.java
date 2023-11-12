@@ -49,7 +49,7 @@ public class RequestLogBuilder {
             body = req.getReader()
                     .lines()
                     .collect(Collectors.joining());
-            req.setAttribute(attributeName, body);
+            req.getSession().setAttribute(attributeName, body);
             body = "\n Request body:\n  " + body;
         }
         return command(body);

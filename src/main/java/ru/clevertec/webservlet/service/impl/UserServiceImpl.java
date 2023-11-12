@@ -2,6 +2,7 @@ package ru.clevertec.webservlet.service.impl;
 
 import org.mapstruct.factory.Mappers;
 import ru.clevertec.webservlet.dto.DeleteResponse;
+import ru.clevertec.webservlet.dto.user.LoginRequest;
 import ru.clevertec.webservlet.dto.user.UserResponse;
 import ru.clevertec.webservlet.dto.user.UserSaveRequest;
 import ru.clevertec.webservlet.dto.user.UserUpdateRequest;
@@ -12,6 +13,7 @@ import ru.clevertec.webservlet.repository.UserRepository;
 import ru.clevertec.webservlet.repository.impl.UserRepositoryImpl;
 import ru.clevertec.webservlet.service.RoleService;
 import ru.clevertec.webservlet.service.UserService;
+import ru.clevertec.webservlet.tables.pojos.Role;
 
 import java.util.Optional;
 import java.util.Set;
@@ -37,6 +39,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponse findByNicknameAndPassword(LoginRequest request) {
+        return userRepository.findByNicknameAndPassword(request.nickname(), request.password())
+                .map(userMapper::toResponse)
+                .orElseThrow(() -> new NotFoundException("User with nickname " + request.nickname()
+                                                         + " and with password " + request.password() + " is not found"));
+    }
+
+    @Override
     public UserResponse save(UserSaveRequest request) {
         checkForRoleExistence(request.roleIds());
         return Optional.of(request)
@@ -51,7 +61,10 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id)
                 .map(user -> {
                     checkForRoleExistence(request.roleIds());
-                    request.roleIds().removeAll(user.getRoleIds());
+                    request.roleIds().removeAll(user.getRoles()
+                            .stream()
+                            .map(Role::getId)
+                            .collect(Collectors.toSet()));
                     return userMapper.mergeToUser(user, request);
                 })
                 .flatMap(user -> userRepository.updateById(id, user))
