@@ -6,7 +6,6 @@ import ru.clevertec.webservlet.dto.user.UserResponse;
 import ru.clevertec.webservlet.dto.user.UserSaveRequest;
 import ru.clevertec.webservlet.dto.user.UserUpdateRequest;
 import ru.clevertec.webservlet.model.UserWithRoleIds;
-import ru.clevertec.webservlet.model.UserWithRoles;
 
 import java.time.LocalDateTime;
 
@@ -17,8 +16,10 @@ public interface UserMapper {
     @Mapping(target = "registerTime", expression = "java(LocalDateTime.now())")
     UserWithRoleIds fromSaveRequest(UserSaveRequest request);
 
-    UserWithRoleIds fromUpdateRequest(UserUpdateRequest request);
+    @Mapping(target = "roleIds", source = "request.roleIds")
+    @Mapping(target = "password", source = "request.password")
+    UserWithRoleIds mergeToUser(UserWithRoleIds userWithRoleIds, UserUpdateRequest request);
 
-    UserResponse toResponse(UserWithRoles user);
+    UserResponse toResponse(UserWithRoleIds user);
 
 }

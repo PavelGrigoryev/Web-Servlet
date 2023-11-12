@@ -7,6 +7,8 @@ import ru.clevertec.webservlet.tables.pojos.Role;
 import ru.clevertec.webservlet.util.HikariConnectionManager;
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static ru.clevertec.webservlet.Tables.ROLE;
 import static ru.clevertec.webservlet.Tables.USER_ROLES;
@@ -23,6 +25,17 @@ public class RoleRepositoryImpl implements RoleRepository {
     public Optional<Role> findById(Long id) {
         return dslContext.fetchOptional(ROLE, ROLE.ID.eq(id))
                 .map(roleRecord -> roleRecord.into(Role.class));
+    }
+
+    @Override
+    public Set<Long> findRoleIdsByIdIn(Set<Long> ids) {
+        return dslContext.select(ROLE.ID)
+                .from(ROLE)
+                .where(ROLE.ID.in(ids))
+                .fetch()
+                .stream()
+                .map(r -> r.get(ROLE.ID))
+                .collect(Collectors.toSet());
     }
 
     @Override

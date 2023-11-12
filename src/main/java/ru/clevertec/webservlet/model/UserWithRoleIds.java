@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -17,6 +17,6 @@ public class UserWithRoleIds {
     private String nickname;
     private String password;
     private LocalDateTime registerTime;
-    private List<Long> roleIds;
+    private Set<Long> roleIds;
 
 }

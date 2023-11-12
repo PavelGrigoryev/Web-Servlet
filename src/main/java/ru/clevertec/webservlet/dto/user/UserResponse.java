@@ -1,11 +1,11 @@
 package ru.clevertec.webservlet.dto.user;
 
 import com.google.gson.annotations.JsonAdapter;
+import com.google.gson.annotations.SerializedName;
 import ru.clevertec.webservlet.dto.adapter.LocalDateTimeAdapter;
-import ru.clevertec.webservlet.model.Role;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 public record UserResponse(Long id,
                            String nickname,
@@ -14,5 +14,6 @@ public record UserResponse(Long id,
                            @JsonAdapter(LocalDateTimeAdapter.class)
                            LocalDateTime registerTime,
 
-                           List<Role> roles) {
+                           @SerializedName("role_ids")
+                           Set<Long> roleIds) {
 }

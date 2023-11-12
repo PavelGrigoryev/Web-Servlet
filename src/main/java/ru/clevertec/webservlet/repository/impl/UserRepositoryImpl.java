@@ -3,7 +3,6 @@ package ru.clevertec.webservlet.repository.impl;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import ru.clevertec.webservlet.model.UserWithRoleIds;
-import ru.clevertec.webservlet.model.UserWithRoles;
 import ru.clevertec.webservlet.repository.UserRepository;
 import ru.clevertec.webservlet.tables.pojos.User;
 import ru.clevertec.webservlet.util.HikariConnectionManager;
@@ -24,23 +23,23 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<UserWithRoles> findById(Long id) {
+    public Optional<UserWithRoleIds> findById(Long id) {
         return dslContext.select(USER.ID,
                         USER.NICKNAME,
                         USER.PASSWORD,
                         USER.REGISTER_TIME,
-                        arrayAgg(ROLE.NAME).as("roles"))
+                        arrayAgg(ROLE.ID).as("role_ids"))
                 .from(USER)
                 .join(USER_ROLES).on(USER.ID.eq(USER_ROLES.USER_ID))
                 .join(ROLE).on(USER_ROLES.ROLE_ID.eq(ROLE.ID))
                 .where(USER.ID.eq(id))
                 .groupBy(USER.ID)
                 .fetchOptional()
-                .map(r -> r.into(UserWithRoles.class));
+                .map(r -> r.into(UserWithRoleIds.class));
     }
 
     @Override
-    public Optional<UserWithRoles> save(UserWithRoleIds userWithRoleIds) {
+    public Optional<UserWithRoleIds> save(UserWithRoleIds userWithRoleIds) {
         return dslContext.insertInto(USER)
                 .set(USER.NICKNAME, userWithRoleIds.getNickname())
                 .set(USER.PASSWORD, userWithRoleIds.getPassword())
@@ -54,7 +53,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<UserWithRoles> updateById(Long id, UserWithRoleIds userWithRoleIds) {
+    public Optional<UserWithRoleIds> updateById(Long id, UserWithRoleIds userWithRoleIds) {
         return dslContext.update(USER)
                 .set(USER.PASSWORD, userWithRoleIds.getPassword())
                 .where(USER.ID.eq(id))
