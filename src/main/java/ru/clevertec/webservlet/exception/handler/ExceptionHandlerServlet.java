@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import ru.clevertec.webservlet.exception.NotEnoughRightsException;
 import ru.clevertec.webservlet.exception.NotFoundException;
 
 import java.io.IOException;
@@ -31,6 +32,9 @@ public class ExceptionHandlerServlet extends HttpServlet {
         PrintWriter printWriter = resp.getWriter();
         if (exception instanceof NotFoundException) {
             resp.setStatus(404);
+            printExceptionResponse(exception.getMessage(), printWriter);
+        } else if (exception instanceof NotEnoughRightsException) {
+            resp.setStatus(401);
             printExceptionResponse(exception.getMessage(), printWriter);
         } else {
             resp.setStatus(500);
