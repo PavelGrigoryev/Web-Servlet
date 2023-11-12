@@ -7,8 +7,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.clevertec.webservlet.dto.DeleteResponse;
-import ru.clevertec.webservlet.dto.UserWithRoleIds;
-import ru.clevertec.webservlet.dto.UserWithRoles;
+import ru.clevertec.webservlet.dto.user.UserResponse;
+import ru.clevertec.webservlet.dto.user.UserSaveRequest;
+import ru.clevertec.webservlet.dto.user.UserUpdateRequest;
 import ru.clevertec.webservlet.service.UserService;
 import ru.clevertec.webservlet.service.impl.UserServiceImpl;
 
@@ -31,15 +32,16 @@ public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String id = req.getParameter("id");
         if (Objects.nonNull(id) && id.matches("\\d+")) {
-            UserWithRoles response = userService.findById(Long.valueOf(id));
+            UserResponse response = userService.findById(Long.valueOf(id));
             sendResponse(resp, response, 200);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        UserWithRoleIds request = getUserFromRequest(req);
-        UserWithRoles response = userService.save(request);
+        String user = req.getAttribute("/users").toString();
+        UserSaveRequest request = gson.fromJson(user, UserSaveRequest.class);
+        UserResponse response = userService.save(request);
         sendResponse(resp, response, 201);
     }
 
@@ -47,8 +49,9 @@ public class UserServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String id = req.getParameter("id");
         if (Objects.nonNull(id) && id.matches("\\d+")) {
-            UserWithRoleIds request = getUserFromRequest(req);
-            UserWithRoles response = userService.updateById(Long.valueOf(id), request);
+            String user = req.getAttribute("/users").toString();
+            UserUpdateRequest request = gson.fromJson(user, UserUpdateRequest.class);
+            UserResponse response = userService.updateById(Long.valueOf(id), request);
             sendResponse(resp, response, 200);
         }
     }
@@ -66,11 +69,6 @@ public class UserServlet extends HttpServlet {
         String json = gson.toJson(response);
         resp.setStatus(code);
         resp.getWriter().print(json);
-    }
-
-    private UserWithRoleIds getUserFromRequest(HttpServletRequest req) {
-        String user = req.getAttribute("users").toString();
-        return gson.fromJson(user, UserWithRoleIds.class);
     }
 
 }

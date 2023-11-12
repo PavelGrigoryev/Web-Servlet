@@ -2,8 +2,8 @@ package ru.clevertec.webservlet.repository.impl;
 
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
-import ru.clevertec.webservlet.dto.UserWithRoleIds;
-import ru.clevertec.webservlet.dto.UserWithRoles;
+import ru.clevertec.webservlet.model.UserWithRoleIds;
+import ru.clevertec.webservlet.model.UserWithRoles;
 import ru.clevertec.webservlet.repository.UserRepository;
 import ru.clevertec.webservlet.tables.pojos.User;
 import ru.clevertec.webservlet.util.HikariConnectionManager;
@@ -66,13 +66,13 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<UserWithRoles> deleteById(Long id) {
+    public Optional<User> deleteById(Long id) {
+        deleteFromUserRoles(id);
         return dslContext.deleteFrom(USER)
                 .where(USER.ID.eq(id))
                 .returning()
                 .fetchOptional()
-                .map(userRecord -> userRecord.into(User.class))
-                .flatMap(u -> findById(u.getId()));
+                .map(userRecord -> userRecord.into(User.class));
     }
 
     private User insertIntoUserRoles(UserWithRoleIds userWithRoleIds, User user) {
@@ -82,6 +82,12 @@ public class UserRepositoryImpl implements UserRepository {
                         .set(USER_ROLES.ROLE_ID, roleId)
                         .execute());
         return user;
+    }
+
+    private void deleteFromUserRoles(Long id) {
+        dslContext.deleteFrom(USER_ROLES)
+                .where(USER_ROLES.USER_ID.eq(id))
+                .execute();
     }
 
 }

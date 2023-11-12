@@ -1,41 +1,51 @@
 package ru.clevertec.webservlet.service.impl;
 
+import org.mapstruct.factory.Mappers;
 import ru.clevertec.webservlet.dto.DeleteResponse;
+import ru.clevertec.webservlet.dto.user.UserResponse;
+import ru.clevertec.webservlet.dto.user.UserSaveRequest;
+import ru.clevertec.webservlet.dto.user.UserUpdateRequest;
 import ru.clevertec.webservlet.exception.NotFoundException;
 import ru.clevertec.webservlet.exception.UniqueException;
-import ru.clevertec.webservlet.dto.UserWithRoleIds;
-import ru.clevertec.webservlet.dto.UserWithRoles;
+import ru.clevertec.webservlet.mapper.UserMapper;
 import ru.clevertec.webservlet.repository.UserRepository;
 import ru.clevertec.webservlet.repository.impl.UserRepositoryImpl;
 import ru.clevertec.webservlet.service.UserService;
 
-import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     public UserServiceImpl() {
         userRepository = new UserRepositoryImpl();
+        userMapper = Mappers.getMapper(UserMapper.class);
     }
 
     @Override
-    public UserWithRoles findById(Long id) {
+    public UserResponse findById(Long id) {
         return userRepository.findById(id)
+                .map(userMapper::toResponse)
                 .orElseThrow(() -> new NotFoundException("User with ID " + id + " is not found"));
     }
 
     @Override
-    public UserWithRoles save(UserWithRoleIds userWithRoleIds) {
-        userWithRoleIds.setRegisterTime(LocalDateTime.now());
-        return userRepository.save(userWithRoleIds)
-                .orElseThrow(() -> new UniqueException("User with username " + userWithRoleIds.getNickname()
-                                                       + " is already exist"));
+    public UserResponse save(UserSaveRequest request) {
+        return Optional.of(request)
+                .map(userMapper::fromSaveRequest)
+                .flatMap(userRepository::save)
+                .map(userMapper::toResponse)
+                .orElseThrow(() -> new UniqueException("User with username " + request.nickname() + " is already exist"));
     }
 
     @Override
-    public UserWithRoles updateById(Long id, UserWithRoleIds userWithRoleIds) {
-        return userRepository.updateById(id, userWithRoleIds)
+    public UserResponse updateById(Long id, UserUpdateRequest request) {
+        return Optional.of(request)
+                .map(userMapper::fromUpdateRequest)
+                .flatMap(user -> userRepository.updateById(id, user))
+                .map(userMapper::toResponse)
                 .orElseThrow(() -> new NotFoundException("No User with ID " + id + " to update"));
     }
 

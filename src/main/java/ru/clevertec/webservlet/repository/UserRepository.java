@@ -1,7 +1,8 @@
 package ru.clevertec.webservlet.repository;
 
-import ru.clevertec.webservlet.dto.UserWithRoleIds;
-import ru.clevertec.webservlet.dto.UserWithRoles;
+import ru.clevertec.webservlet.model.UserWithRoleIds;
+import ru.clevertec.webservlet.model.UserWithRoles;
+import ru.clevertec.webservlet.tables.pojos.User;
 
 import java.util.Optional;
 
@@ -13,6 +14,6 @@ public interface UserRepository {
 
     Optional<UserWithRoles> updateById(Long id, UserWithRoleIds userWithRoleIds);
 
-    Optional<UserWithRoles> deleteById(Long id);
+    Optional<User> deleteById(Long id);
 
 }

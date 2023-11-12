@@ -19,7 +19,7 @@ public class LoggingFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
-        String requestUri = req.getRequestURI().substring(1);
+        String requestUri = req.getRequestURI();
         String logMessage = RequestLogBuilder.builder()
                 .method(req.getMethod())
                 .url(req.getRequestURL().toString())

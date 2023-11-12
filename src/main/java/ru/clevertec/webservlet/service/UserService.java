@@ -1,16 +1,17 @@
 package ru.clevertec.webservlet.service;
 
 import ru.clevertec.webservlet.dto.DeleteResponse;
-import ru.clevertec.webservlet.dto.UserWithRoleIds;
-import ru.clevertec.webservlet.dto.UserWithRoles;
+import ru.clevertec.webservlet.dto.user.UserResponse;
+import ru.clevertec.webservlet.dto.user.UserSaveRequest;
+import ru.clevertec.webservlet.dto.user.UserUpdateRequest;
 
 public interface UserService {
 
-    UserWithRoles findById(Long id);
+    UserResponse findById(Long id);
 
-    UserWithRoles save(UserWithRoleIds userWithRoleIds);
+    UserResponse save(UserSaveRequest request);
 
-    UserWithRoles updateById(Long id, UserWithRoleIds userWithRoleIds);
+    UserResponse updateById(Long id, UserUpdateRequest request);
 
     DeleteResponse deleteById(Long id);
 

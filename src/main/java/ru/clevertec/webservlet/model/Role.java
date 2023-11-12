@@ -1,4 +1,4 @@
-package ru.clevertec.webservlet.dto;
+package ru.clevertec.webservlet.model;
 
 public enum Role {
 
