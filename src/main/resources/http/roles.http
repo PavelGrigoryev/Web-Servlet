@@ -1,0 +1,24 @@
+###найти роль по id
+GET http://localhost:8080/roles?id=1
+Accept: application/json
+
+###сохранить роль
+POST http://localhost:8080/roles
+Content-Type: application/json
+
+{
+  "name": "DEMON_HUNTER",
+  "description": "Wow! That is a great role!"
+}
+
+###обновить роль по id
+PUT http://localhost:8080/roles?id=2
+Content-Type: application/json
+
+{
+  "description": "Disappointment, not a role"
+}
+
+###удалить роль по id
+DELETE http://localhost:8080/roles?id=2
+Content-Type: application/json

@@ -13,7 +13,7 @@ public interface RoleRepository {
 
     Optional<Role> save(Role role);
 
-    Optional<Role> update(Role role);
+    Optional<Role> updateById(Long id, Role role);
 
     Optional<Role> deleteById(Long id);
 

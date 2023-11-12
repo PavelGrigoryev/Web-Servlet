@@ -42,6 +42,7 @@ public class RoleRepositoryImpl implements RoleRepository {
     public Optional<Role> save(Role role) {
         return dslContext.insertInto(ROLE)
                 .set(ROLE.NAME, role.getName())
+                .set(ROLE.DESCRIPTION, role.getDescription())
                 .onDuplicateKeyIgnore()
                 .returning()
                 .fetchOptional()
@@ -49,10 +50,10 @@ public class RoleRepositoryImpl implements RoleRepository {
     }
 
     @Override
-    public Optional<Role> update(Role role) {
+    public Optional<Role> updateById(Long id, Role role) {
         return dslContext.update(ROLE)
                 .set(ROLE.DESCRIPTION, role.getDescription())
-                .where(ROLE.ID.eq(role.getId()))
+                .where(ROLE.ID.eq(id))
                 .returning()
                 .fetchOptional()
                 .map(roleRecord -> roleRecord.into(Role.class));
