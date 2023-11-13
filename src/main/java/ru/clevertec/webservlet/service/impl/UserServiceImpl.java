@@ -1,5 +1,6 @@
 package ru.clevertec.webservlet.service.impl;
 
+import io.jsonwebtoken.JwtException;
 import org.mapstruct.factory.Mappers;
 import ru.clevertec.webservlet.dto.DeleteResponse;
 import ru.clevertec.webservlet.dto.user.AuthorizationResponse;
@@ -46,7 +47,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserWithRoles findByNickname(String nickname) {
         return userRepository.findByNickname(nickname)
-                .orElseThrow(() -> new NotFoundException("User with nickname " + nickname + " is not found"));
+                .orElseThrow(() -> new JwtException("Wrong Jwt! User with nickname " + nickname + " was deleted by ADMIN"));
     }
 
     @Override

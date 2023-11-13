@@ -5,18 +5,21 @@ Accept: application/json
 ###сохранить пользователя
 POST http://localhost:8080/users
 Content-Type: application/json
+Authorization: Bearer {{jwt}}
 
 {
   "nickname": "StarLord",
   "password": "Black123",
   "role_ids": [
-    1, 2
+    1,
+    2
   ]
 }
 
 ###обновить пользователя по id
 PUT http://localhost:8080/users?id=2
 Content-Type: application/json
+Authorization: Bearer {{jwt}}
 
 {
   "password": "azerty777",
@@ -28,3 +31,4 @@ Content-Type: application/json
 ###удалить пользователя по id
 DELETE http://localhost:8080/users?id=2
 Content-Type: application/json
+Authorization: Bearer {{jwt}}
