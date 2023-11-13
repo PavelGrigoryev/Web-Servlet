@@ -8,8 +8,8 @@ VALUES ('Alice', 'password123', '2021-10-01 12:00:00'),
 
 INSERT INTO role (name, description)
 VALUES ('ADMIN', 'Mega Powerful role'),
-       ('EDITOR', 'I can change a world'),
-       ('VIEWER', 'This role is sucks');
+       ('BAMBOLIALO', 'I can change a world'),
+       ('DEATH_KNIGHT', 'This role is sucks');
 
 INSERT INTO user_roles (user_id, role_id)
 VALUES (1, 1),

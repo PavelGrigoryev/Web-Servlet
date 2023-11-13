@@ -7,6 +7,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static ru.clevertec.webservlet.filter.model.RequestMethod.POST;
+import static ru.clevertec.webservlet.filter.model.RequestMethod.PUT;
+
 public class RequestLogBuilder {
 
     private final StringBuilder log;
@@ -45,7 +48,7 @@ public class RequestLogBuilder {
 
     public RequestLogBuilder body(HttpServletRequest req, String attributeName) throws IOException {
         String body = "";
-        if ("POST".equals(req.getMethod()) || "PUT".equals(req.getMethod())) {
+        if (POST.name().equals(req.getMethod()) || PUT.name().equals(req.getMethod())) {
             body = req.getReader()
                     .lines()
                     .collect(Collectors.joining());
