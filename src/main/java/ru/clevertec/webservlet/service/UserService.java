@@ -6,10 +6,13 @@ import ru.clevertec.webservlet.dto.user.LoginRequest;
 import ru.clevertec.webservlet.dto.user.UserResponse;
 import ru.clevertec.webservlet.dto.user.UserSaveRequest;
 import ru.clevertec.webservlet.dto.user.UserUpdateRequest;
+import ru.clevertec.webservlet.model.UserWithRoles;
 
 public interface UserService {
 
     UserResponse findById(Long id);
+
+    UserWithRoles findByNickname(String nickname);
 
     AuthorizationResponse findByNicknameAndPassword(LoginRequest request);
 

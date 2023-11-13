@@ -9,6 +9,8 @@ public interface UserRepository {
 
     Optional<UserWithRoles> findById(Long id);
 
+    Optional<UserWithRoles> findByNickname(String nickname);
+
     Optional<UserWithRoles> findByNicknameAndPassword(String nickname, String password);
 
     Optional<UserWithRoles> save(UserWithRoles userWithRoles);

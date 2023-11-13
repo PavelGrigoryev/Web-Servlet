@@ -10,6 +10,7 @@ import ru.clevertec.webservlet.dto.user.UserUpdateRequest;
 import ru.clevertec.webservlet.exception.NotFoundException;
 import ru.clevertec.webservlet.exception.UniqueException;
 import ru.clevertec.webservlet.mapper.UserMapper;
+import ru.clevertec.webservlet.model.UserWithRoles;
 import ru.clevertec.webservlet.repository.UserRepository;
 import ru.clevertec.webservlet.repository.impl.UserRepositoryImpl;
 import ru.clevertec.webservlet.service.JwtService;
@@ -40,6 +41,12 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id)
                 .map(userMapper::toResponse)
                 .orElseThrow(() -> new NotFoundException("User with ID " + id + " is not found"));
+    }
+
+    @Override
+    public UserWithRoles findByNickname(String nickname) {
+        return userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new NotFoundException("User with nickname " + nickname + " is not found"));
     }
 
     @Override

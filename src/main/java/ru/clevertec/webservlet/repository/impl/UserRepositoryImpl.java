@@ -43,6 +43,24 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public Optional<UserWithRoles> findByNickname(String nickname) {
+        return dslContext.select(
+                        USER.ID,
+                        USER.NICKNAME,
+                        USER.PASSWORD,
+                        USER.REGISTER_TIME,
+                        multiset(select(ROLE)
+                                .from(USER_ROLES)
+                                .join(ROLE).on(USER_ROLES.ROLE_ID.eq(ROLE.ID))
+                                .where(USER_ROLES.USER_ID.eq(USER.ID)))
+                                .convertFrom(r -> r.into(Role.class)).as("roles"))
+                .from(USER)
+                .where(USER.NICKNAME.eq(nickname))
+                .fetchOptional()
+                .map(r -> r.into(UserWithRoles.class));
+    }
+
+    @Override
     public Optional<UserWithRoles> findByNicknameAndPassword(String nickname, String password) {
         return dslContext.select(
                         USER.ID,

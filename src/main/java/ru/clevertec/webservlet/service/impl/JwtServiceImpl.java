@@ -35,6 +35,14 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
+    public List<String> extractRoles(String token) {
+        List<?> roles = extractClaim(token, claims -> claims.get("roles", List.class));
+        return roles.stream()
+                .map(Object::toString)
+                .toList();
+    }
+
+    @Override
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);

@@ -32,12 +32,12 @@ public class AuthorizationServlet extends HttpServlet {
         if (loggedUser.contains("role_ids")) {
             UserSaveRequest request = gson.fromJson(loggedUser, UserSaveRequest.class);
             AuthorizationResponse response = userService.register(request);
-            req.getSession().setAttribute("loggedUser", response);
+            req.getSession().setAttribute("jwt", response.jwt());
             sendResponse(resp, response, 201);
         } else {
             LoginRequest request = gson.fromJson(loggedUser, LoginRequest.class);
             AuthorizationResponse response = userService.findByNicknameAndPassword(request);
-            req.getSession().setAttribute("loggedUser", response);
+            req.getSession().setAttribute("jwt", response.jwt());
             sendResponse(resp, response, 200);
         }
     }
