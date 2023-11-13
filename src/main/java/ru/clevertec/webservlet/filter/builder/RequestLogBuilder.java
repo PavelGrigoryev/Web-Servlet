@@ -52,7 +52,7 @@ public class RequestLogBuilder {
             body = req.getReader()
                     .lines()
                     .collect(Collectors.joining());
-            req.getSession().setAttribute(attributeName, body);
+            req.setAttribute(attributeName, body);
             body = "\n Request body:\n  " + body;
         }
         return command(body);

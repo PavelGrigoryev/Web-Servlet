@@ -2,6 +2,7 @@ package ru.clevertec.webservlet.service.impl;
 
 import org.mapstruct.factory.Mappers;
 import ru.clevertec.webservlet.dto.DeleteResponse;
+import ru.clevertec.webservlet.dto.user.AuthorizationResponse;
 import ru.clevertec.webservlet.dto.user.LoginRequest;
 import ru.clevertec.webservlet.dto.user.UserResponse;
 import ru.clevertec.webservlet.dto.user.UserSaveRequest;
@@ -11,6 +12,7 @@ import ru.clevertec.webservlet.exception.UniqueException;
 import ru.clevertec.webservlet.mapper.UserMapper;
 import ru.clevertec.webservlet.repository.UserRepository;
 import ru.clevertec.webservlet.repository.impl.UserRepositoryImpl;
+import ru.clevertec.webservlet.service.JwtService;
 import ru.clevertec.webservlet.service.RoleService;
 import ru.clevertec.webservlet.service.UserService;
 import ru.clevertec.webservlet.tables.pojos.Role;
@@ -23,11 +25,13 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleService roleService;
+    private final JwtService jwtService;
     private final UserMapper userMapper;
 
     public UserServiceImpl() {
         userRepository = new UserRepositoryImpl();
         roleService = new RoleServiceImpl();
+        jwtService = new JwtServiceImpl();
         userMapper = Mappers.getMapper(UserMapper.class);
     }
 
@@ -39,9 +43,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse findByNicknameAndPassword(LoginRequest request) {
+    public AuthorizationResponse findByNicknameAndPassword(LoginRequest request) {
         return userRepository.findByNicknameAndPassword(request.nickname(), request.password())
-                .map(userMapper::toResponse)
+                .map(user -> {
+                    String jwt = jwtService.generateToken(user);
+                    return userMapper.toAuthResponse(user, jwt, jwtService.extractExpiration(jwt));
+                })
                 .orElseThrow(() -> new NotFoundException("User with nickname " + request.nickname()
                                                          + " and with password " + request.password() + " is not found"));
     }
@@ -53,6 +60,19 @@ public class UserServiceImpl implements UserService {
                 .map(userMapper::fromSaveRequest)
                 .flatMap(userRepository::save)
                 .map(userMapper::toResponse)
+                .orElseThrow(() -> new UniqueException("User with username " + request.nickname() + " is already exist"));
+    }
+
+    @Override
+    public AuthorizationResponse register(UserSaveRequest request) {
+        checkForRoleExistence(request.roleIds());
+        return Optional.of(request)
+                .map(userMapper::fromSaveRequest)
+                .flatMap(userRepository::save)
+                .map(user -> {
+                    String jwt = jwtService.generateToken(user);
+                    return userMapper.toAuthResponse(user, jwt, jwtService.extractExpiration(jwt));
+                })
                 .orElseThrow(() -> new UniqueException("User with username " + request.nickname() + " is already exist"));
     }
 

@@ -2,3 +2,6 @@ postgresql:
   url: "jdbc:postgresql://localhost:5432/web"
   user: "pavel"
   password: "pavel"
+jwt:
+  secretKey: "73357638792F423F4528482B4D6251655468576D5A7133743677397A24432646"
+  expiration: "86400000"

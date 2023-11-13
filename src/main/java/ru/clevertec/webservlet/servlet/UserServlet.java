@@ -39,7 +39,7 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String user = req.getSession().getAttribute("/users").toString();
+        String user = req.getAttribute("/users").toString();
         UserSaveRequest request = gson.fromJson(user, UserSaveRequest.class);
         UserResponse response = userService.save(request);
         sendResponse(resp, response, 201);
@@ -49,7 +49,7 @@ public class UserServlet extends HttpServlet {
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String id = req.getParameter("id");
         if (Objects.nonNull(id) && id.matches("\\d+")) {
-            String user = req.getSession().getAttribute("/users").toString();
+            String user = req.getAttribute("/users").toString();
             UserUpdateRequest request = gson.fromJson(user, UserUpdateRequest.class);
             UserResponse response = userService.updateById(Long.valueOf(id), request);
             sendResponse(resp, response, 200);

@@ -1,6 +1,7 @@
 package ru.clevertec.webservlet.service;
 
 import ru.clevertec.webservlet.dto.DeleteResponse;
+import ru.clevertec.webservlet.dto.user.AuthorizationResponse;
 import ru.clevertec.webservlet.dto.user.LoginRequest;
 import ru.clevertec.webservlet.dto.user.UserResponse;
 import ru.clevertec.webservlet.dto.user.UserSaveRequest;
@@ -10,9 +11,11 @@ public interface UserService {
 
     UserResponse findById(Long id);
 
-    UserResponse findByNicknameAndPassword(LoginRequest request);
+    AuthorizationResponse findByNicknameAndPassword(LoginRequest request);
 
     UserResponse save(UserSaveRequest request);
+
+    AuthorizationResponse register(UserSaveRequest request);
 
     UserResponse updateById(Long id, UserUpdateRequest request);
 

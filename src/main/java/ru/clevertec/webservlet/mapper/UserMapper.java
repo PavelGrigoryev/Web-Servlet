@@ -4,6 +4,7 @@ import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import ru.clevertec.webservlet.dto.user.AuthorizationResponse;
 import ru.clevertec.webservlet.dto.user.UserResponse;
 import ru.clevertec.webservlet.dto.user.UserSaveRequest;
 import ru.clevertec.webservlet.dto.user.UserUpdateRequest;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-@Mapper(imports = LocalDateTime.class)
+@Mapper
 public interface UserMapper {
 
     @Mapping(target = "registerTime", expression = "java(LocalDateTime.now())")
@@ -26,6 +27,8 @@ public interface UserMapper {
     UserWithRoles mergeToUser(UserWithRoles userWithRoles, UserUpdateRequest request);
 
     UserResponse toResponse(UserWithRoles user);
+
+    AuthorizationResponse toAuthResponse(UserWithRoles user, String jwt, LocalDateTime jwtExpiration);
 
     @IterableMapping(qualifiedByName = "idToRole")
     List<Role> idsToRoles(Set<Long> ids);
