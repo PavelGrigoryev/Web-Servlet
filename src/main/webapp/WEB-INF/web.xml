@@ -20,6 +20,10 @@
         <exception-type>ru.clevertec.webservlet.exception.NotEnoughRightsException</exception-type>
         <location>/exception_handler</location>
     </error-page>
+    <error-page>
+        <exception-type>ru.clevertec.webservlet.exception.SessionInvalidException</exception-type>
+        <location>/exception_handler</location>
+    </error-page>
 
     <filter>
         <filter-name>LoggingFilter</filter-name>
