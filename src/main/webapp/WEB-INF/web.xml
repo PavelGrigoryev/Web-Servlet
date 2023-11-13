@@ -31,7 +31,7 @@
     </filter>
     <filter>
         <filter-name>AdminRoleFilter</filter-name>
-        <filter-class>ru.clevertec.webservlet.filter.AdminRoleFilter</filter-class>
+        <filter-class>ru.clevertec.webservlet.filter.AdminFilter</filter-class>
     </filter>
 
     <filter-mapping>
@@ -45,6 +45,7 @@
     <filter-mapping>
         <filter-name>AdminRoleFilter</filter-name>
         <url-pattern>/roles</url-pattern>
+        <url-pattern>/users</url-pattern>
     </filter-mapping>
 
 </web-app>

@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 @Slf4j
-public class AdminRoleFilter implements Filter {
+public class AdminFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {

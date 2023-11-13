@@ -1,0 +1,21 @@
+###залогиниться используя никнейм и пороль
+POST http://localhost:8080/auth
+Content-Type: application/json
+
+{
+  "nickname": "Charlie",
+  "password": "qwerty789"
+}
+
+###зарегестрироваться новым пользователем, роль с id 1 = ADMIN
+POST http://localhost:8080/auth
+Content-Type: application/json
+
+{
+  "nickname": "Alfie",
+  "password": "lucky99",
+  "role_ids": [
+    1,
+    2
+  ]
+}
