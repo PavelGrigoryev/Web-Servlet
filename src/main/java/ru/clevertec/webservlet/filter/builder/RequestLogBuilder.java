@@ -22,15 +22,15 @@ public class RequestLogBuilder {
     }
 
     public RequestLogBuilder method(String method) {
-        return command("\n Request method: " + method);
+        return append("\n Request method: " + method);
     }
 
     public RequestLogBuilder url(String url) {
-        return command("\n Request URL: " + url);
+        return append("\n Request URL: " + url);
     }
 
     public RequestLogBuilder headers(HttpServletRequest req) {
-        return command("\n Request headers: " + Collections.list(req.getHeaderNames())
+        return append("\n Request headers: " + Collections.list(req.getHeaderNames())
                 .stream()
                 .map(headerName -> "\n  " + headerName + ": " + req.getHeader(headerName))
                 .collect(Collectors.joining()));
@@ -38,8 +38,8 @@ public class RequestLogBuilder {
 
     public RequestLogBuilder params(Map<String, String[]> parameterMap) {
         return parameterMap.isEmpty()
-                ? command("")
-                : command("\n Request parameters:" + parameterMap.entrySet()
+                ? append("")
+                : append("\n Request parameters:" + parameterMap.entrySet()
                 .stream()
                 .map(entry -> "\n  " + entry.getKey() + ": " + String.join("", entry.getValue()))
                 .collect(Collectors.joining()));
@@ -47,13 +47,13 @@ public class RequestLogBuilder {
 
     public RequestLogBuilder body(HttpServletRequest req, String attributeName) {
         if (POST.name().equals(req.getMethod()) || PUT.name().equals(req.getMethod())) {
-            return command("\n Request body:\n  " + req.getAttribute(attributeName));
+            return append("\n Request body:\n  " + req.getAttribute(attributeName));
         } else {
-            return command("");
+            return append("");
         }
     }
 
-    private RequestLogBuilder command(String command) {
+    private RequestLogBuilder append(String command) {
         log.append(command);
         return this;
     }

@@ -51,7 +51,7 @@ public class JwtFilter implements Filter {
 
     private void checkTokenValidation(HttpServletRequest req) {
         String authorization = req.getHeader("Authorization");
-        if (Objects.nonNull(authorization)) {
+        if (Objects.nonNull(authorization) && authorization.length() > 6) {
             String jwt = authorization.substring(7);
             String nickname = jwtService.extractUsername(jwt);
             UserWithRoles user = userService.findByNickname(nickname);

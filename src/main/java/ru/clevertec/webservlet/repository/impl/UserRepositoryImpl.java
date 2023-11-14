@@ -1,5 +1,6 @@
 package ru.clevertec.webservlet.repository.impl;
 
+import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
 import ru.clevertec.webservlet.model.UserWithRoles;
@@ -26,56 +27,17 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Optional<UserWithRoles> findById(Long id) {
-        return dslContext.select(
-                        USER.ID,
-                        USER.NICKNAME,
-                        USER.PASSWORD,
-                        USER.REGISTER_TIME,
-                        multiset(select(ROLE)
-                                .from(USER_ROLES)
-                                .join(ROLE).on(USER_ROLES.ROLE_ID.eq(ROLE.ID))
-                                .where(USER_ROLES.USER_ID.eq(USER.ID)))
-                                .convertFrom(r -> r.into(Role.class)).as("roles"))
-                .from(USER)
-                .where(USER.ID.eq(id))
-                .fetchOptional()
-                .map(r -> r.into(UserWithRoles.class));
+        return getUserWithRoles(USER.ID.eq(id));
     }
 
     @Override
     public Optional<UserWithRoles> findByNickname(String nickname) {
-        return dslContext.select(
-                        USER.ID,
-                        USER.NICKNAME,
-                        USER.PASSWORD,
-                        USER.REGISTER_TIME,
-                        multiset(select(ROLE)
-                                .from(USER_ROLES)
-                                .join(ROLE).on(USER_ROLES.ROLE_ID.eq(ROLE.ID))
-                                .where(USER_ROLES.USER_ID.eq(USER.ID)))
-                                .convertFrom(r -> r.into(Role.class)).as("roles"))
-                .from(USER)
-                .where(USER.NICKNAME.eq(nickname))
-                .fetchOptional()
-                .map(r -> r.into(UserWithRoles.class));
+        return getUserWithRoles(USER.NICKNAME.eq(nickname));
     }
 
     @Override
     public Optional<UserWithRoles> findByNicknameAndPassword(String nickname, String password) {
-        return dslContext.select(
-                        USER.ID,
-                        USER.NICKNAME,
-                        USER.PASSWORD,
-                        USER.REGISTER_TIME,
-                        multiset(select(ROLE)
-                                .from(USER_ROLES)
-                                .join(ROLE).on(USER_ROLES.ROLE_ID.eq(ROLE.ID))
-                                .where(USER_ROLES.USER_ID.eq(USER.ID)))
-                                .convertFrom(r -> r.into(Role.class)).as("roles"))
-                .from(USER)
-                .where(USER.NICKNAME.eq(nickname).and(USER.PASSWORD.eq(password)))
-                .fetchOptional()
-                .map(r -> r.into(UserWithRoles.class));
+        return getUserWithRoles(USER.NICKNAME.eq(nickname).and(USER.PASSWORD.eq(password)));
     }
 
     @Override
@@ -112,6 +74,23 @@ public class UserRepositoryImpl implements UserRepository {
                 .returning()
                 .fetchOptional()
                 .map(userRecord -> userRecord.into(User.class));
+    }
+
+    private Optional<UserWithRoles> getUserWithRoles(Condition condition) {
+        return dslContext.select(
+                        USER.ID,
+                        USER.NICKNAME,
+                        USER.PASSWORD,
+                        USER.REGISTER_TIME,
+                        multiset(select(ROLE)
+                                .from(USER_ROLES)
+                                .join(ROLE).on(USER_ROLES.ROLE_ID.eq(ROLE.ID))
+                                .where(USER_ROLES.USER_ID.eq(USER.ID)))
+                                .convertFrom(r -> r.into(Role.class)).as("roles"))
+                .from(USER)
+                .where(condition)
+                .fetchOptional()
+                .map(r -> r.into(UserWithRoles.class));
     }
 
     private User insertIntoUserRoles(UserWithRoles userWithRoles, User user) {
