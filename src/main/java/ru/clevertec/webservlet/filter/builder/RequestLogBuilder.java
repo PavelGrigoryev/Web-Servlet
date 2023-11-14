@@ -2,7 +2,6 @@ package ru.clevertec.webservlet.filter.builder;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,16 +45,12 @@ public class RequestLogBuilder {
                 .collect(Collectors.joining()));
     }
 
-    public RequestLogBuilder body(HttpServletRequest req, String attributeName) throws IOException {
-        String body = "";
+    public RequestLogBuilder body(HttpServletRequest req, String attributeName) {
         if (POST.name().equals(req.getMethod()) || PUT.name().equals(req.getMethod())) {
-            body = req.getReader()
-                    .lines()
-                    .collect(Collectors.joining());
-            req.setAttribute(attributeName, body);
-            body = "\n Request body:\n  " + body;
+            return command("\n Request body:\n  " + req.getAttribute(attributeName));
+        } else {
+            return command("");
         }
-        return command(body);
     }
 
     private RequestLogBuilder command(String command) {

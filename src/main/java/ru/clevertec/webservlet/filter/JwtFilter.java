@@ -68,13 +68,14 @@ public class JwtFilter implements Filter {
     }
 
     private void checkIfRolesWasUpdated(List<String> roles, UserWithRoles user) {
+        if (roles.size() != user.getRoles().size()) {
+            generateNewJwt(user);
+        }
         if (!new HashSet<>(roles).containsAll(user.getRoles()
                 .stream()
                 .map(Role::getName)
                 .toList())) {
-            String newJwt = jwtService.generateToken(user);
-            throw new JwtException("ADMIN change your roles, your new jwt:  " + newJwt
-                                   + "  put it in header 'Authorization'");
+            generateNewJwt(user);
         }
     }
 
@@ -84,6 +85,12 @@ public class JwtFilter implements Filter {
                 .findAny()
                 .orElseThrow(() -> new JwtException("Only user with role ADMIN has rights to change objects"));
         log.warn("{} {} is here", admin, jwtService.extractUsername(jwt));
+    }
+
+    private void generateNewJwt(UserWithRoles user) {
+        String newJwt = jwtService.generateToken(user);
+        throw new JwtException("ADMIN change your roles, your new jwt:  " + newJwt
+                               + "  put it in header 'Authorization'");
     }
 
 }
