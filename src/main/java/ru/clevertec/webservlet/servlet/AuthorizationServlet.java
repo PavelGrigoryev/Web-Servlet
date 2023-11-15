@@ -1,6 +1,7 @@
 package ru.clevertec.webservlet.servlet;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -29,12 +30,13 @@ public class AuthorizationServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String loggedUser = req.getAttribute("/auth").toString();
-        if (loggedUser.contains("role_ids")) {
-            UserSaveRequest request = gson.fromJson(loggedUser, UserSaveRequest.class);
+        JsonObject jsonObject = gson.fromJson(loggedUser, JsonObject.class);
+        if (jsonObject.has("role_ids")) {
+            UserSaveRequest request = gson.fromJson(jsonObject, UserSaveRequest.class);
             AuthorizationResponse response = userService.register(request);
             sendResponse(resp, response, 201);
         } else {
-            LoginRequest request = gson.fromJson(loggedUser, LoginRequest.class);
+            LoginRequest request = gson.fromJson(jsonObject, LoginRequest.class);
             AuthorizationResponse response = userService.findByNicknameAndPassword(request);
             sendResponse(resp, response, 200);
         }
